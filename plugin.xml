@@ -1,0 +1,132 @@
+<?xml version='1.0' encoding='utf-8'?>
+<plugin id="cn.xinge.zzd.xgpush" version="0.0.1" xmlns="http://apache.org/cordova/ns/plugins/1.0" xmlns:android="http://schemas.android.com/apk/res/android">
+    <name>com.xinge.zzd.xgpush</name>
+    <description>Tencent XGPush Plugin</description>
+    <author>zzd</author>
+    <keywords>xgpush,xg</keywords>
+    <engines>
+        <engine name="cordova" version=">=3.0.0" />
+    </engines> 
+    <preference name="ACCESS_ID" />
+    <preference name="ACCESS_KEY" />
+    <preference name="IOS_ACCESS_ID" />
+    <preference name="IOS_ACCESS_KEY" />
+    <js-module name="XGPush" src="www/XGPush.js">
+        <clobbers target="XGPush" />
+    </js-module>
+    <platform name="android">
+        <config-file target="res/xml/config.xml" parent="/*">
+            <feature name="XGPush">
+                <param name="android-package" value="cn.xinge.zzd.XGPush" />
+            </feature>
+        </config-file>
+        <config-file target="AndroidManifest.xml" parent="/manifest"> 
+            <!-- 【必须】 信鸽SDK所需权限   -->
+            <uses-permission android:name="android.permission.INTERNET" />
+            <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+            <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+            <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+            <uses-permission android:name="android.permission.WAKE_LOCK" />
+            <uses-permission android:name="android.permission.VIBRATE" />
+            <!-- 【常用】 信鸽SDK所需权限 -->
+            <uses-permission android:name="android.permission.RECEIVE_USER_PRESENT" />
+            <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+            <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+            <uses-permission android:name="android.permission.WRITE_SETTINGS" />
+            <!-- 【可选】 信鸽SDK所需权限 -->
+            <uses-permission android:name="android.permission.RESTART_PACKAGES" />
+            <uses-permission android:name="android.permission.BROADCAST_STICKY" />
+            <uses-permission android:name="android.permission.KILL_BACKGROUND_PROCESSES" />
+            <uses-permission android:name="android.permission.GET_TASKS" />
+            <uses-permission android:name="android.permission.READ_LOGS" />
+            <uses-permission android:name="android.permission.BLUETOOTH" />
+            <uses-permission android:name="android.permission.BATTERY_STATS" />
+        </config-file>
+        <config-file target="AndroidManifest.xml" parent="/manifest/application">
+             <receiver android:name="com.tencent.android.tpush.XGPushReceiver" android:process=":xg_service_v3" >
+                <intent-filter android:priority="0x7fffffff" >
+                    <!-- 【必须】 信鸽SDK的内部广播 -->
+                    <action android:name="com.tencent.android.tpush.action.SDK" />
+                    <action android:name="com.tencent.android.tpush.action.INTERNAL_PUSH_MESSAGE" />
+                    <!-- 【必须】 系统广播：开屏和网络切换 -->
+                    <action android:name="android.intent.action.USER_PRESENT" />
+                    <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
+                    <!-- 【可选】 一些常用的系统广播，增强信鸽service的复活机会，请根据需要选择。当然，你也可以添加APP自定义的一些广播让启动service -->
+                    <action android:name="android.bluetooth.adapter.action.STATE_CHANGED" />
+                    <action android:name="android.intent.action.ACTION_POWER_CONNECTED" />
+                    <action android:name="android.intent.action.ACTION_POWER_DISCONNECTED" />
+                </intent-filter>
+            </receiver>
+            <activity android:name="com.tencent.android.tpush.XGPushActivity" android:exported="false" >
+                <intent-filter>
+                <!-- 若使用AndroidStudio，请设置android:name="android.intent.action"-->
+                    <action android:name="android.intent.action" />
+                </intent-filter>
+            </activity>
+            <!-- 【必须】 信鸽service -->
+            <service android:name="com.tencent.android.tpush.service.XGPushServiceV3" android:exported="true" android:persistent="true" android:process=":xg_service_v3" />
+            <service android:name="com.tencent.android.tpush.rpc.XGRemoteService" android:exported="true">
+                <intent-filter>
+                    <!-- 【必须】 请修改为当前APP包名 .PUSH_ACTION, 如demo的包名为：com.qq.xgdemo -->
+                    <action android:name="$PACKAGE_NAME.PUSH_ACTION" />
+                </intent-filter>
+            </service>
+            <!-- 【必须】 【注意】authorities修改为 包名.AUTH_XGPUSH, 如demo的包名为：com.qq.xgdemo-->
+            <provider android:name="com.tencent.android.tpush.XGPushProvider" android:authorities="$PACKAGE_NAME.AUTH_XGPUSH" android:exported="true"/>
+            <!-- 【必须】 【注意】authorities修改为 包名.TPUSH_PROVIDER, 如demo的包名为：com.qq.xgdemo-->
+            <provider android:name="com.tencent.android.tpush.SettingsContentProvider" android:authorities="$PACKAGE_NAME.TPUSH_PROVIDER" android:exported="false" />
+            <!-- 【必须】 【注意】authorities修改为 包名.TENCENT.MID.V3, 如demo的包名为：com.qq.xgdemo-->
+            <provider android:name="com.tencent.mid.api.MidProvider" android:authorities="$PACKAGE_NAME.TENCENT.MID.V3" android:exported="true" ></provider>
+            <!-- 【必须】 请将YOUR_ACCESS_ID修改为APP的AccessId，“21”开头的10位数字，中间没空格 -->
+            <meta-data android:name="XG_V2_ACCESS_ID" android:value="$ACCESS_ID" />
+            <!-- 【必须】 请将YOUR_ACCESS_KEY修改为APP的AccessKey，“A”开头的12位字符串，中间没空格 -->
+            <meta-data android:name="XG_V2_ACCESS_KEY" android:value="$ACCESS_KEY"/>
+        </config-file>
+        <!-- Tencent XGPush SDK  -->
+        <source-file src="src/android/libs/jg_filter_sdk_1.1.jar" target-dir="libs" />
+        <source-file src="src/android/libs/Xg_sdk_v3.2.3_20180403_1839.jar" target-dir="libs" />
+        <source-file src="src/android/libs/wup-1.0.0.E-SNAPSHOT.jar" target-dir="libs" />
+        <source-file src="src/android/libs/mid-core-sdk-4.0.6.jar" target-dir="libs" />
+        <!-- CPU SO -->
+        <source-file src="src/android/libs/Other-Platform-SO/armeabi/libxguardian.so" target-dir="libs/armeabi" />
+        <source-file src="src/android/libs/Other-Platform-SO/armeabi/libtpnsSecurity.so" target-dir="libs/armeabi" />
+        <source-file src="src/android/libs/Other-Platform-SO/armeabi-v7a/libtpnsSecurity.so" target-dir="libs/armeabi-v7a" />
+        <source-file src="src/android/libs/Other-Platform-SO/armeabi-v7a/libxguardian.so" target-dir="libs/armeabi-v7a" />
+        <!-- API -->
+        <source-file src="src/android/XGPushPlugin.java" target-dir="src/com/xinge/xgpush" />
+        <source-file src="src/android/XGPushReceiver.java" target-dir="src/com/xinge/xgpush" />
+        <source-file src="src/android/XGPushCallback.java" target-dir="src/com/xinge/xgpush" />
+    </platform>
+    <platform name="ios">
+        <config-file target="config.xml" parent="/*">
+            <feature name="XGPush">
+                <param name="ios-package" value="CDVXGPushPlugin" />
+                <param name="onload" value="true" />
+            </feature>
+            </config-file>
+            <config-file target="*-Info.plist" parent="XGPushMeta">
+            <dict>
+                <key>AccessID</key>
+                <integer>$IOS_ACCESS_ID</integer>
+                <key>AccessKey</key>
+                <string>$IOS_ACCESS_KEY</string>
+            </dict>
+        </config-file>
+        <!-- Tencent XGPush SDK -->
+        <header-file src="src/ios/libs/XGPush.h" />
+        <header-file src="src/ios/libs/XGSetting.h" />
+        <source-file src="src/ios/libs/libXG-SDK.a" framework="true" />
+        <!-- Cordova Plugin -->
+        <header-file src="src/ios/AppDelegate+CDVXGPush.h" />
+        <source-file src="src/ios/AppDelegate+CDVXGPush.m" />
+        <header-file src="src/ios/CDVXGPushPlugin.h" />
+        <source-file src="src/ios/CDVXGPushPlugin.m" />
+        <!-- Dependencies -->
+        <framework src="libz.dylib" />
+        <framework src="libsqlite3.dylib" />
+        <framework src="CFNetwork.framework" />
+        <framework src="SystemConfiguration.framework" />
+        <framework src="CoreTelephony.framework" />
+        <framework src="Security.framework" />
+  </platform>
+</plugin>

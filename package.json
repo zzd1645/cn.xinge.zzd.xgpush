@@ -1,0 +1,35 @@
+{
+  "name": "cn.xinge.zzd.xgpush",
+  "version": "0.0.1",
+  "description": "Tencent XGPush Plugin",
+  "cordova": {
+    "id": "cn.xinge.zzd.xgpush",
+    "platforms": [
+      "android",
+      "ios"
+    ]
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/zzd1645/cn.xinge.zzd.xgpush.git"
+  },
+  "keywords": [
+    "xgpush",
+    "xg",
+    "ecosystem:cordova",
+    "cordova-android",
+    "cordova-ios"
+  ],
+  "engines": [
+    {
+      "name": "cordova",
+      "version": ">=3.0.0"
+    }
+  ],
+  "author": "zzd",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/zzd1645/cn.xinge.zzd.xgpush/issues"
+  },
+  "homepage": "https://github.com/zzd1645/cn.xinge.zzd.xgpush#readme"
+}
