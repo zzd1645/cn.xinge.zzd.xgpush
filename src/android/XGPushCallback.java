@@ -1,4 +1,4 @@
-package net.sunlu.xgpush;
+package com.xinge.xgpush;
 
 import org.apache.cordova.CallbackContext;
 import org.json.JSONException;

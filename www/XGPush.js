@@ -1,10 +1,69 @@
 var exec = require('cordova/exec'),
-    cordova = require('cordova'),
-    channel = require('cordova/channel'),
-    utils = require('cordova/utils');
-channel.createSticky('onCordovaXGPushReady');
-channel.waitForInitialization('onCordovaXGPushReady');
-var XGPush=function(){
+  cordova = require('cordova'),
+  channel = require('cordova/channel'),
+  utils = require('cordova/utils');
+function XGPush() {
+
+    var me = this;
+
+    this.channels = {
+        'click': channel.create('click'),
+        'message': channel.create('message'),
+        'register': channel.create('register'),
+        'unRegister': channel.create('unRegister'),
+        'show': channel.create('show'),
+        'deleteTag': channel.create('deleteTag'),
+        'setTag': channel.create('setTag'),
+    };
+
+    this.on = function (type, func) {
+        if (type in me.channels) {
+            me.channels[type].subscribe(func);
+        }
+    };
+
+    this.un = function (type, func) {
+        if (type in this.channels) {
+            me.channels[type].unsubscribe(func);
+        }
+    };
+
+    this.registerPush = function (account, successCallback, errorCallback) {
+        exec(successCallback, errorCallback, "XGPush", "registerPush", [account]);
+    };
+
+    this.unRegisterPush = function (successCallback, errorCallback) {
+        exec(successCallback, errorCallback, "XGPush", "unRegisterPush", []);
+    };
+
+    this.setTag = function (tagName, successCallback, errorCallback) {
+        exec(successCallback, errorCallback, "XGPush", "setTag", [tagName]);
+    };
+
+    this.deleteTag = function (tagName, successCallback, errorCallback) {
+        exec(successCallback, errorCallback, "XGPush", "deleteTag", [tagName]);
+    };
+
+    this.addLocalNotification = function (type, title, content, successCallback, errorCallback) {
+        exec(successCallback, errorCallback, "XGPush", "addLocalNotification", [type, title, content]);
+    };
+
+    this.enableDebug = function (debugMode, successCallback, errorCallback) {
+        exec(successCallback, errorCallback, "XGPush", "enableDebug", [debugMode]);
+    };
+
+    this.getLaunchInfo = function (successCallback) {
+        exec(successCallback, null, "XGPush", "getLaunchInfo", []);
+    };
+
+    this.getToken = function (successCallback) {
+        exec(successCallback, null, "XGPush", "getToken", []);
+    };
+
+    this.setAccessInfo = function (accessId, accessKey, successCallback, errorCallback) {
+        exec(successCallback, errorCallback, "XGPush", "setAccessInfo", [accessId, accessKey]);
+    };
+
     channel.onCordovaReady.subscribe(function () {
         exec(
             function (event) {
@@ -23,64 +82,6 @@ var XGPush=function(){
             utils.alert("[ERROR] RegisterPush: ", e);
         });
     });
-};
+}
 
-XGPush.prototype.channels={
-    'click': channel.create('click'),
-    'message': channel.create('message'),
-    'register': channel.create('register'),
-    'unRegister': channel.create('unRegister'),
-    'show': channel.create('show'),
-    'deleteTag': channel.create('deleteTag'),
-    'setTag': channel.create('setTag')
-};
-XGPush.prototype.on = function (type, func) {
-    if (type in me.channels) {
-        me.channels[type].subscribe(func);
-    }
-};
-
-XGPush.prototype.un = function (type, func) {
-    if (type in this.channels) {
-        me.channels[type].unsubscribe(func);
-    }
-};
-
-XGPush.prototype.registerPush = function (account, successCallback, errorCallback) {
-    exec(successCallback, errorCallback, "XGPush", "registerPush", [account]);
-};
-
-XGPush.prototype.unRegisterPush = function (successCallback, errorCallback) {
-    exec(successCallback, errorCallback, "XGPush", "unRegisterPush", []);
-};
-
-XGPush.prototype.setTag = function (tagName, successCallback, errorCallback) {
-    exec(successCallback, errorCallback, "XGPush", "setTag", [tagName]);
-};
-
-XGPush.prototype.deleteTag = function (tagName, successCallback, errorCallback) {
-    exec(successCallback, errorCallback, "XGPush", "deleteTag", [tagName]);
-};
-
-XGPush.prototype.addLocalNotification = function (type, title, content, successCallback, errorCallback) {
-    exec(successCallback, errorCallback, "XGPush", "addLocalNotification", [type, title, content]);
-};
-
-XGPush.prototype.enableDebug = function (debugMode, successCallback, errorCallback) {
-    exec(successCallback, errorCallback, "XGPush", "enableDebug", [debugMode]);
-};
-
-XGPush.prototype.getLaunchInfo = function (successCallback) {
-    exec(successCallback, null, "XGPush", "getLaunchInfo", []);
-};
-
-XGPush.prototype.getToken = function (successCallback) {
-    exec(successCallback, null, "XGPush", "getToken", []);
-};
-
-XGPush.prototype.setAccessInfo = function (accessId, accessKey, successCallback, errorCallback) {
-    exec(successCallback, errorCallback, "XGPush", "setAccessInfo", [accessId, accessKey]);
-};
-
-
-module.exports=new XGPush();
+module.exports = new XGPush();
