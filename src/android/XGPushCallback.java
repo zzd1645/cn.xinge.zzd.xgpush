@@ -7,11 +7,6 @@ import org.json.JSONObject;
 import com.tencent.android.tpush.XGIOperateCallback;
 
 
-import com.tencent.android.tpush.service.XGPushServiceV3;
-import com.tencent.android.tpush.rpc.XGRemoteService;
-import com.tencent.android.tpush.XGPushProvider;
-import com.tencent.android.tpush.SettingsContentProvider;
-import com.tencent.mid.api.MidProvider;
 
 public class XGPushCallback implements XGIOperateCallback {
 

@@ -15,12 +15,7 @@ import com.tencent.android.tpush.XGPushManager;
 import com.tencent.android.tpush.XGPushRegisterResult;
 import com.tencent.android.tpush.XGPushShowedResult;
 import com.tencent.android.tpush.XGPushTextMessage;
-import com.tencent.android.tpush.service.XGPushServiceV3;
-import com.tencent.android.tpush.rpc.XGRemoteService;
 
-import com.tencent.android.tpush.XGPushProvider;
-import com.tencent.android.tpush.SettingsContentProvider;
-import com.tencent.mid.api.MidProvider;
 
 public class XGPushReceiver extends XGPushBaseReceiver {
 

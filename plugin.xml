@@ -17,7 +17,7 @@
     <platform name="android">
         <config-file target="res/xml/config.xml" parent="/*">
             <feature name="XGPush">
-                <param name="android-package" value="cn.xinge.zzd.XGPush" />
+                <param name="android-package" value="com.xinge.xgpush.XGPushPlugin" />
             </feature>
         </config-file>
         <config-file target="AndroidManifest.xml" parent="/manifest"> 
