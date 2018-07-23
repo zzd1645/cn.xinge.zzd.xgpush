@@ -15,7 +15,15 @@ function XGPush() {
         'deleteTag': channel.create('deleteTag'),
         'setTag': channel.create('setTag'),
     };
-
+    this.init =function (){
+        exec(function (event) {
+                if (event && (event.type in me.channels)) {
+                    me.channels[event.type].fire(event);
+                }
+            },
+            null, "XGPush", "addListener", []
+        );
+    }
     this.on = function (type, func) {
         if (type in me.channels) {
             me.channels[type].subscribe(func);
@@ -64,24 +72,24 @@ function XGPush() {
         exec(successCallback, errorCallback, "XGPush", "setAccessInfo", [accessId, accessKey]);
     };
 
-    channel.onCordovaReady.subscribe(function () {
-        exec(
-            function (event) {
-                console.log("[XGPush] Event = " + event.type + ": ", event);
-                if (event && (event.type in me.channels)) {
-                    me.channels[event.type].fire(event);
-                }
-            },
-            null, "XGPush", "addListener", []
-            );
+    // channel.onCordovaReady.subscribe(function () {
+    //     exec(
+    //         function (event) {
+    //             console.log("[XGPush] Event = " + event.type + ": ", event);
+    //             if (event && (event.type in me.channels)) {
+    //                 me.channels[event.type].fire(event);
+    //             }
+    //         },
+    //         null, "XGPush", "addListener", []
+    //         );
 
-        me.registerPush(null, function (info) {
-            console.log("[XGPush] RegisterPush: ", info);
-            channel.onCordovaXGPushReady.fire();
-        }, function (e) {
-            utils.alert("[ERROR] RegisterPush: ", e);
-        });
-    });
+    //     me.registerPush(null, function (info) {
+    //         console.log("[XGPush] RegisterPush: ", info);
+    //         channel.onCordovaXGPushReady.fire();
+    //     }, function (e) {
+    //         utils.alert("[ERROR] RegisterPush: ", e);
+    //     });
+    // });
 }
 
 module.exports = new XGPush();
