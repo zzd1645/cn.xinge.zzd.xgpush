@@ -17,7 +17,7 @@ XGPush.prototype.init =function (success){
     exec(success,null, "XGPush", "addListener", []);
 }
 XGPush.prototype.on=function (type, func) {
-    if (type in me.channels) {
+    if (type in this.channels) {
         this.channels[type].subscribe(func);
     }
 };
