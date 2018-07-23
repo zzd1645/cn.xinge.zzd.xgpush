@@ -13,8 +13,13 @@ XGPush.prototype.channels = {
 };
 
 //注册监听
-XGPush.prototype.init =function (success){
-    exec(success,null, "XGPush", "addListener", []);
+//注册监听
+XGPush.prototype.init =function (){
+    exec((event)=>{
+        if (event && ("xgpush."+event.type in this.channels)) {
+            this.channels["xgpush."+event.type].fire(event);
+        }
+    },null, "XGPush", "addListener", []);
 }
 XGPush.prototype.on=function (type, func) {
     if (type in this.channels) {
